@@ -60,7 +60,9 @@ public class IndexUnit {
     @Field(type = FieldType.Text, store = true)
     private TypeOfDoc typeOfDoc;
 
-
+    public IndexUnit(){
+        typeOfDoc = TypeOfDoc.LAW;
+    }
 
     public IndexUnit(ContractParsedDataDTO contractParsedDataDTO){
         this.employeeName = contractParsedDataDTO.getEmployeeFullName();

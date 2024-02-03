@@ -1,6 +1,7 @@
 package com.example.ddmdemo.controller;
 
 import com.example.ddmdemo.dto.AddContractDTO;
+import com.example.ddmdemo.dto.AddLawDTO;
 import com.example.ddmdemo.dto.DummyDocumentFileDTO;
 import com.example.ddmdemo.dto.DummyDocumentFileResponseDTO;
 import com.example.ddmdemo.service.interfaces.IndexingService;
@@ -19,6 +20,7 @@ public class IndexController {
     @ResponseStatus(HttpStatus.CREATED)
     public DummyDocumentFileResponseDTO addDocumentFile(
         @ModelAttribute DummyDocumentFileDTO documentFile) {
+        // OVO NE KORISTIMO MOZE DELETE :D
         var serverFilename = indexingService.indexDocument(documentFile.file());
         return new DummyDocumentFileResponseDTO(serverFilename);
     }
@@ -26,7 +28,15 @@ public class IndexController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String addContract(@RequestBody AddContractDTO addContractDTO) {
-        var serverFilename = indexingService.indexContractAndSaveFile(addContractDTO.documentFile(), addContractDTO.contractParsedDataDTO());
+        var serverFilename = indexingService.indexContractAndSaveFile(addContractDTO.documentFile(),
+                addContractDTO.contractParsedDataDTO());
+        return serverFilename;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public String addLaw(@RequestBody AddLawDTO addLawDTO) {
+        var serverFilename = indexingService.indexLawAndSaveFile(addLawDTO.documentFile());
         return serverFilename;
     }
 }

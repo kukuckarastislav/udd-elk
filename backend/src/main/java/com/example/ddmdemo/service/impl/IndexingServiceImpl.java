@@ -112,6 +112,23 @@ public class IndexingServiceImpl implements IndexingService {
         return title;
     }
 
+    @Override
+    public String indexLawAndSaveFile(MultipartFile documentFile) {
+        var fileId = fileService.store(documentFile, UUID.randomUUID().toString());
+
+        IndexUnit newContract = new IndexUnit();
+        newContract.setFileId(fileId);
+        var title = Objects.requireNonNull(documentFile.getOriginalFilename()).split("\\.")[0];
+        newContract.setTitle(title);
+
+        var documentContent = extractDocumentContent(documentFile);
+        newContract.setLawText(documentContent);
+
+        indexRepository.save(newContract);
+
+        return title;
+    }
+
     private String extractDocumentContent(MultipartFile multipartFile) {
         String mimeType = detectMimeType(multipartFile);
         String documentContent;
