@@ -12,4 +12,6 @@ public interface IndexingService {
     String indexContract(MultipartFile documentFile, ContractParsedDataDTO contractParsedDataDTO, String fileId);
     String indexContractAndSaveFile(MultipartFile documentFile, ContractParsedDataDTO contractParsedDataDTO);
     String indexLawAndSaveFile(MultipartFile documentFile);
+
+    ContractParsedDataDTO parseContract(MultipartFile documentFile);
 }

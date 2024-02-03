@@ -60,10 +60,6 @@ public class IndexUnit {
     @Field(type = FieldType.Text, store = true)
     private TypeOfDoc typeOfDoc;
 
-    public IndexUnit(){
-        typeOfDoc = TypeOfDoc.LAW;
-    }
-
     public IndexUnit(ContractParsedDataDTO contractParsedDataDTO){
         this.employeeName = contractParsedDataDTO.getEmployeeFullName();
         this.employerSurname = contractParsedDataDTO.getEmployeeFullName(); //TODO: odluciti dal ce biti samo ime ili odvojeno ime i prezime

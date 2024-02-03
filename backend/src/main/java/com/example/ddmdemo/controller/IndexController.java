@@ -1,13 +1,11 @@
 package com.example.ddmdemo.controller;
 
-import com.example.ddmdemo.dto.AddContractDTO;
-import com.example.ddmdemo.dto.AddLawDTO;
-import com.example.ddmdemo.dto.DummyDocumentFileDTO;
-import com.example.ddmdemo.dto.DummyDocumentFileResponseDTO;
+import com.example.ddmdemo.dto.*;
 import com.example.ddmdemo.service.interfaces.IndexingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/index")
@@ -25,7 +23,13 @@ public class IndexController {
         return new DummyDocumentFileResponseDTO(serverFilename);
     }
 
-    @PostMapping
+    @PostMapping("/contract/parse")
+    @ResponseStatus(HttpStatus.OK)
+    public ContractParsedDataDTO parseContract(@RequestBody MultipartFile documentFile) {
+        return indexingService.parseContract(documentFile);
+    }
+
+    @PostMapping("/contract")
     @ResponseStatus(HttpStatus.CREATED)
     public String addContract(@RequestBody AddContractDTO addContractDTO) {
         var serverFilename = indexingService.indexContractAndSaveFile(addContractDTO.documentFile(),
@@ -33,10 +37,10 @@ public class IndexController {
         return serverFilename;
     }
 
-    @PostMapping
+    @PostMapping(value = "/law", consumes = { "multipart/form-data" })
     @ResponseStatus(HttpStatus.CREATED)
-    public String addLaw(@RequestBody AddLawDTO addLawDTO) {
-        var serverFilename = indexingService.indexLawAndSaveFile(addLawDTO.documentFile());
+    public String addLaw(@RequestParam("documentFile") MultipartFile documentFile) {
+        var serverFilename = indexingService.indexLawAndSaveFile(documentFile);
         return serverFilename;
     }
 }

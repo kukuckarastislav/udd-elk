@@ -7,6 +7,7 @@ import com.example.ddmdemo.indexmodel.DummyIndex;
 import com.example.ddmdemo.indexmodel.IndexUnit;
 import com.example.ddmdemo.indexrepository.DummyIndexRepository;
 import com.example.ddmdemo.model.DummyTable;
+import com.example.ddmdemo.model.TypeOfDoc;
 import com.example.ddmdemo.respository.DummyRepository;
 import com.example.ddmdemo.service.interfaces.FileService;
 import com.example.ddmdemo.service.interfaces.IndexingService;
@@ -117,6 +118,7 @@ public class IndexingServiceImpl implements IndexingService {
         var fileId = fileService.store(documentFile, UUID.randomUUID().toString());
 
         IndexUnit newContract = new IndexUnit();
+        newContract.setTypeOfDoc(TypeOfDoc.LAW);
         newContract.setFileId(fileId);
         var title = Objects.requireNonNull(documentFile.getOriginalFilename()).split("\\.")[0];
         newContract.setTitle(title);
@@ -127,6 +129,12 @@ public class IndexingServiceImpl implements IndexingService {
         indexRepository.save(newContract);
 
         return title;
+    }
+
+    @Override
+    public ContractParsedDataDTO parseContract(MultipartFile documentFile) {
+        String documentContent = extractDocumentContent(documentFile);
+        return new ContractParsedDataDTO("", "", "", "");
     }
 
     private String extractDocumentContent(MultipartFile multipartFile) {
