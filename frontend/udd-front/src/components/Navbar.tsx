@@ -10,20 +10,14 @@ export default function Navbar() {
           <Link to={"/"}>ZAKONKO</Link>
         </div>
         <div className='flex gap-4'>
-          <div>
-            <Button variant="outlined" size="small">
-              <Link to={"/add/law"}>Add Law</Link>
-            </Button>
+          <div className='cool-link'>
+            <Link to={"/add/law"}>Add Law</Link>
           </div>
-          <div>
-            <Button variant="outlined" size="small">
-              <Link to={"/add/contract"}>Add Contract</Link>
-            </Button>
+          <div className='cool-link'>
+            <Link to={"/add/contract"}>Add Contract</Link>
           </div>
-          <div>
-            <Button variant="outlined" size="small">
-              <Link to={"/signup/gov"}>Signup Government</Link>
-            </Button>  
+          <div className='cool-link'>
+            <Link to={"/signup/gov"}>Signup Government</Link>
           </div>
         </div>
       </div>

@@ -10,6 +10,57 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fileInputCss{
+  @apply block w-full text-sm text-slate-500
+  file:mr-4 file:py-2 file:px-4
+  file:rounded-lg file:border-0
+  file:text-sm file:font-semibold
+  file:bg-blue-50 file:text-blue-700
+  hover:file:bg-blue-100 file:cursor-pointer;
+}
 
+.cool-btn {
+  @apply cursor-pointer font-bold relative overflow-hidden
+   px-4 py-2 text-white bg-gradient-to-r from-blue-600
+    to-purple-600 border-none rounded-md 
+    transition-transform duration-100 ease-in-out;
 
+  &:hover {
+    @apply transform scale-105;
+  }
 
+  &:active {
+    @apply transform scale-95;
+  }
+
+  &::before {
+    content: '';
+    @apply absolute inset-0 bg-white opacity-25 transition-opacity duration-100 ease-in-out;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    @apply opacity-0;
+  }
+
+  &:active::before {
+    @apply opacity-0;
+  }
+}
+
+.cool-link {
+  @apply relative text-blue-500 overflow-hidden transition-all duration-300 ease-in-out;
+
+  &:before {
+    content: '';
+    @apply absolute inset-x-0 bottom-0 w-full h-0.5 bg-purple-500 transform origin-bottom scale-x-0 transition-transform duration-300 ease-in-out;
+  }
+
+  &:hover:before {
+    @apply scale-x-100;
+  }
+
+  &:hover {
+    @apply text-purple-700;
+  }
+}
