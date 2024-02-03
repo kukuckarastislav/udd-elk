@@ -1,8 +1,10 @@
 package com.example.ddmdemo.service.impl;
 
+import com.example.ddmdemo.dto.ContractParsedDataDTO;
 import com.example.ddmdemo.exceptionhandling.exception.LoadingException;
 import com.example.ddmdemo.exceptionhandling.exception.StorageException;
 import com.example.ddmdemo.indexmodel.DummyIndex;
+import com.example.ddmdemo.indexmodel.IndexUnit;
 import com.example.ddmdemo.indexrepository.DummyIndexRepository;
 import com.example.ddmdemo.model.DummyTable;
 import com.example.ddmdemo.respository.DummyRepository;
@@ -19,14 +21,18 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.tika.Tika;
 import org.apache.tika.language.detect.LanguageDetector;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.ddmdemo.indexrepository.IndexRepository;
 
 @Service
 @RequiredArgsConstructor
 public class IndexingServiceImpl implements IndexingService {
 
     private final DummyIndexRepository dummyIndexRepository;
+
+    private final IndexRepository indexRepository;
 
     private final DummyRepository dummyRepository;
 
@@ -66,15 +72,61 @@ public class IndexingServiceImpl implements IndexingService {
         return serverFilename;
     }
 
-    private String extractDocumentContent(MultipartFile multipartPdfFile) {
+    @Override
+    @Transactional
+    public String indexContract(MultipartFile documentFile, ContractParsedDataDTO contractParsedDataDTO, String fileId) {
+        IndexUnit newContract = new IndexUnit(contractParsedDataDTO);
+        newContract.setFileId(fileId);
+        var title = Objects.requireNonNull(documentFile.getOriginalFilename()).split("\\.")[0];
+        newContract.setTitle(title);
+
+        var documentContent = extractDocumentContent(documentFile);
+        newContract.setContractText(documentContent);
+
+        //TODO: get geolocation from address
+        newContract.setLocation(new GeoPoint(45.0, 45.0));
+
+        indexRepository.save(newContract);
+
+        return title;
+    }
+
+    @Override
+    public String indexContractAndSaveFile(MultipartFile documentFile, ContractParsedDataDTO contractParsedDataDTO) {
+
+        var fileId = fileService.store(documentFile, UUID.randomUUID().toString());
+
+        IndexUnit newContract = new IndexUnit(contractParsedDataDTO);
+        newContract.setFileId(fileId);
+        var title = Objects.requireNonNull(documentFile.getOriginalFilename()).split("\\.")[0];
+        newContract.setTitle(title);
+
+        var documentContent = extractDocumentContent(documentFile);
+        newContract.setContractText(documentContent);
+
+        //TODO: get geolocation from address
+        newContract.setLocation(new GeoPoint(45.0, 45.0));
+
+        indexRepository.save(newContract);
+
+        return title;
+    }
+
+    private String extractDocumentContent(MultipartFile multipartFile) {
+        String mimeType = detectMimeType(multipartFile);
         String documentContent;
-        try (var pdfFile = multipartPdfFile.getInputStream()) {
-            var pdDocument = PDDocument.load(pdfFile);
-            var textStripper = new PDFTextStripper();
-            documentContent = textStripper.getText(pdDocument);
-            pdDocument.close();
-        } catch (IOException e) {
-            throw new LoadingException("Error while trying to load PDF file content.");
+
+        if(mimeType.equals("application/pdf")){
+            try (var pdfFile = multipartFile.getInputStream()) {
+                var pdDocument = PDDocument.load(pdfFile);
+                var textStripper = new PDFTextStripper();
+                documentContent = textStripper.getText(pdDocument);
+                pdDocument.close();
+            } catch (IOException e) {
+                throw new LoadingException("Error while trying to load PDF file content.");
+            }
+        }else{
+            throw new LoadingException("File format are not supported.");
         }
 
         return documentContent;

@@ -83,3 +83,44 @@
 2024-02-02T03:12:35.215+01:00  INFO 18612 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2024-02-02T03:12:35.216+01:00  INFO 18612 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2024-02-02T03:12:35.220+01:00  INFO 18612 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-02-02T17:21:52.842+01:00  INFO 3620 --- [main] com.example.ddmdemo.DdmdemoApplication   : Starting DdmdemoApplication using Java 21.0.2 with PID 3620 (D:\ftn\master\UDD-upravljanje-digitalnim-dokumentima\project\backend\target\classes started by kukuc in D:\ftn\master\UDD-upravljanje-digitalnim-dokumentima\project\backend)
+2024-02-02T17:21:52.843+01:00  INFO 3620 --- [main] com.example.ddmdemo.DdmdemoApplication   : No active profile set, falling back to 1 default profile: "default"
+2024-02-02T17:21:53.499+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-02-02T17:21:53.499+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2024-02-02T17:21:53.504+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 2 ms. Found 0 Elasticsearch repository interfaces.
+2024-02-02T17:21:53.633+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-02-02T17:21:53.634+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2024-02-02T17:21:53.659+01:00  INFO 3620 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Elasticsearch - Could not safely identify store assignment for repository candidate interface com.example.ddmdemo.respository.DummyRepository; If you want this repository to be a Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ElasticsearchRepository, org.springframework.data.elasticsearch.repository.ElasticsearchRepository
+2024-02-02T17:21:53.672+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 1 Elasticsearch repository interfaces.
+2024-02-02T17:21:53.676+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-02-02T17:21:53.677+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+2024-02-02T17:21:53.684+01:00  INFO 3620 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data Reactive Elasticsearch - Could not safely identify store assignment for repository candidate interface com.example.ddmdemo.respository.DummyRepository; If you want this repository to be a Reactive Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ReactiveElasticsearchRepository
+2024-02-02T17:21:53.684+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Reactive Elasticsearch repository interfaces.
+2024-02-02T17:21:53.691+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-02-02T17:21:53.692+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-02T17:21:53.702+01:00  INFO 3620 --- [main] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.example.ddmdemo.indexrepository.DummyIndexRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2024-02-02T17:21:53.707+01:00  INFO 3620 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 1 JPA repository interfaces.
+2024-02-02T17:21:53.866+01:00  INFO 3620 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=cab62715-590e-3de4-8b3f-78763c09c71c
+2024-02-02T17:21:54.247+01:00  INFO 3620 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-02-02T17:21:54.266+01:00  INFO 3620 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-02-02T17:21:54.266+01:00  INFO 3620 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
+2024-02-02T17:21:54.382+01:00  INFO 3620 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-02-02T17:21:54.383+01:00  INFO 3620 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1499 ms
+2024-02-02T17:21:54.595+01:00  INFO 3620 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-02-02T17:21:54.663+01:00  INFO 3620 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.13.Final
+2024-02-02T17:21:54.665+01:00  INFO 3620 --- [main] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2024-02-02T17:21:54.865+01:00  INFO 3620 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-02T17:21:54.888+01:00  INFO 3620 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-02-02T17:21:55.025+01:00  INFO 3620 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2ae3235e
+2024-02-02T17:21:55.026+01:00  INFO 3620 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-02-02T17:21:55.046+01:00  WARN 3620 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-02-02T17:21:55.581+01:00  INFO 3620 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-02-02T17:21:55.594+01:00  WARN 3620 --- [main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-02-02T17:21:55.594+01:00  WARN 3620 --- [main] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "government" does not exist, skipping
+2024-02-02T17:21:55.607+01:00  INFO 3620 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-02T17:21:57.040+01:00  INFO 3620 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-02-02T17:21:57.387+01:00  INFO 3620 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-02-02T17:21:57.397+01:00  INFO 3620 --- [main] com.example.ddmdemo.DdmdemoApplication   : Started DdmdemoApplication in 4.865 seconds (process running for 5.983)
+2024-02-02T17:25:44.131+01:00  INFO 3620 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-02-02T17:25:44.133+01:00  INFO 3620 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-02-02T17:25:44.135+01:00  INFO 3620 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
