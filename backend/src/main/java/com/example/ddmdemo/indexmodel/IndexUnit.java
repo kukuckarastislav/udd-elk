@@ -61,8 +61,15 @@ public class IndexUnit {
     private TypeOfDoc typeOfDoc;
 
     public IndexUnit(ContractParsedDataDTO contractParsedDataDTO){
-        this.employeeName = contractParsedDataDTO.getEmployeeFullName();
-        this.employerSurname = contractParsedDataDTO.getEmployeeFullName(); //TODO: odluciti dal ce biti samo ime ili odvojeno ime i prezime
+        var fullNameParts = contractParsedDataDTO.getEmployeeFullName().split(" ");
+        if(fullNameParts.length > 1){
+            this.employeeName = fullNameParts[0];
+            this.employerSurname = fullNameParts[1];
+        } else {
+            this.employeeName = fullNameParts[0];
+            this.employerSurname = fullNameParts[0];
+        }
+
         this.governmentName = contractParsedDataDTO.getGovernmentName();
         this.governmentLevel = contractParsedDataDTO.getGovernmentLevel();
         this.address = contractParsedDataDTO.getGovernmentAddress();

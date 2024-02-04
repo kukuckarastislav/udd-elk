@@ -1,6 +1,16 @@
 package com.example.ddmdemo.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-public record AddContractDTO(MultipartFile documentFile, ContractParsedDataDTO contractParsedDataDTO) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class AddContractDTO {
+    MultipartFile documentFile;
+    ContractParsedDataDTO contractParsedDataDTO;
 }

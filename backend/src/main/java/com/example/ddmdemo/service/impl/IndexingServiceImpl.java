@@ -133,8 +133,34 @@ public class IndexingServiceImpl implements IndexingService {
 
     @Override
     public ContractParsedDataDTO parseContract(MultipartFile documentFile) {
+        var parsed = new ContractParsedDataDTO();
+
         String documentContent = extractDocumentContent(documentFile);
-        return new ContractParsedDataDTO("", "", "", "");
+
+        var dc1 = documentContent.replaceAll("\r", "");
+        var lines = dc1.split("\n");
+
+        for(int i = 0; i < lines.length; i++) {
+            if(lines[i].equals("Agencija za objavljivanje zakona ")) {
+                if(i+4 < lines.length && lines[i+4].contains("Uprava za:")){
+                    parsed.setGovernmentName(lines[i+4].replace("Uprava za: ", "").trim());
+                }
+
+                if(i+5 < lines.length && lines[i+5].contains("Nivo Uprave:")){
+                    parsed.setGovernmentLevel(lines[i+5].replace("Nivo Uprave: ", "").trim());
+                }
+
+                if(i+6 < lines.length){
+                    parsed.setGovernmentAddress(lines[i+6].trim());
+                }
+            }
+
+            if(i-1 >= 0 && lines[i].equals("Potpisanik ugovora za agenciju ")) {
+                parsed.setEmployeeFullName(lines[i-1].trim());
+            }
+        }
+
+        return parsed;
     }
 
     private String extractDocumentContent(MultipartFile multipartFile) {

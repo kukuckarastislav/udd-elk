@@ -2,10 +2,14 @@ package com.example.ddmdemo.controller;
 
 import com.example.ddmdemo.dto.*;
 import com.example.ddmdemo.service.interfaces.IndexingService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/index")
@@ -29,11 +33,20 @@ public class IndexController {
         return indexingService.parseContract(documentFile);
     }
 
-    @PostMapping("/contract")
+
+    @PostMapping(value = "/contract", consumes = { "multipart/form-data" })
     @ResponseStatus(HttpStatus.CREATED)
-    public String addContract(@RequestBody AddContractDTO addContractDTO) {
-        var serverFilename = indexingService.indexContractAndSaveFile(addContractDTO.documentFile(),
-                addContractDTO.contractParsedDataDTO());
+    public String addContract(@RequestParam("documentFile") MultipartFile documentFile,
+                              @RequestParam("contractParsedDataDTO") String contractParsedDataDTOStr) {
+
+        ContractParsedDataDTO contractParsedDataDTO = null;
+        try {
+            contractParsedDataDTO = new ObjectMapper().readValue(contractParsedDataDTOStr, ContractParsedDataDTO.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        var serverFilename = indexingService.indexContractAndSaveFile(documentFile, contractParsedDataDTO);
         return serverFilename;
     }
 

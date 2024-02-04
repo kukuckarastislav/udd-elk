@@ -44,8 +44,8 @@ export default function IndexLawPage() {
 
   return (
     <div className={style.IndexLawPageCss}>
-      <div className='flex flex-col justify-center gap-4 rounded-md shadow-sm p-4 bg-slate-50'>
-        <Typography variant='h5'>Upload a PDF file to index law</Typography>
+      <div className='flex flex-col justify-center gap-4 rounded-md shadow-sm p-6 bg-slate-50'>
+        <Typography variant='h5'>Upload new Law</Typography>
         <input className='fileInputCss' type="file" onChange={handleFileChange} accept=".pdf" />
         <button hidden={uploadedState==0 || uploadedState==3} className="cool-btn w-fit" 
         onClick={handleUpload}>{uploadedState == 1 ? 'Uploud' : 'Uplouding ...'}</button>
