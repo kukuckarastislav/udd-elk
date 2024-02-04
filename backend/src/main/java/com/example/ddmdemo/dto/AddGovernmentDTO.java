@@ -15,10 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class AddGovernmentDTO {
     String name;
     GovLevel govLevel;
-    Address address;
+    String password;
+
+    String street;
+    String number;
+    String city;
+    String country;
+    String postalCode;
+
     int numberOfEmployees;
-
-    ContractParsedDataDTO contractParsedDataDTO;
-
-    MultipartFile documentFile;
 }

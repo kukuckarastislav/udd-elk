@@ -92,7 +92,7 @@ export default function IndexContractPage() {
 
 
         <div className='flex flex-col gap-4 mt-8'>
-          <div className='block'>
+          <div className='block w-48'>
             <span className="block text-sm font-medium text-slate-700">Potpisanik ugovora</span>
             <input type="text" value={contractParsedDataDTO.employeeFullName} className="cool-input"
               onChange={(event) => {
@@ -102,7 +102,7 @@ export default function IndexContractPage() {
             />
           </div>
 
-          <div className='block'>
+          <div className='block w-48'>
             <span className="block text-sm font-medium text-slate-700">Naziv Vlade</span>
             <input type="text" value={contractParsedDataDTO.governmentName} className="cool-input"
               onChange={(event) => {
@@ -112,7 +112,7 @@ export default function IndexContractPage() {
             />
           </div>
 
-          <div className='block'>
+          <div className='block w-48'>
             <span className="block text-sm font-medium text-slate-700">Adresa vlade</span>
             <input type="text" value={contractParsedDataDTO.governmentAddress} className="cool-input"
               onChange={(event) => {
@@ -122,7 +122,7 @@ export default function IndexContractPage() {
             />
           </div>
 
-          <div className='block'>
+          <div className='block w-48'>
             <span className="block text-sm font-medium text-slate-700">Nivo vlade</span>
             <select value={contractParsedDataDTO.governmentLevel} className="cool-input"
               onChange={(event) => {

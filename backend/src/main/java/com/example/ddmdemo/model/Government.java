@@ -25,6 +25,8 @@ public class Government {
 
     private GovLevel govLevel;
 
+    private String password;
+
     @Embedded
     private Address address;
 
@@ -34,7 +36,14 @@ public class Government {
     public Government(AddGovernmentDTO addGovernmentDTO) {
         this.name = addGovernmentDTO.getName();
         this.govLevel = addGovernmentDTO.getGovLevel();
-        this.address = addGovernmentDTO.getAddress();
+        this.password = addGovernmentDTO.getPassword();
+        this.address = new Address(
+            addGovernmentDTO.getStreet(),
+            addGovernmentDTO.getNumber(),
+            addGovernmentDTO.getCity(),
+            addGovernmentDTO.getCountry(),
+            addGovernmentDTO.getPostalCode()
+        );
         this.numberOfEmployees = addGovernmentDTO.getNumberOfEmployees();
     }
 }
