@@ -2,20 +2,25 @@ import { useState } from 'react';
 import { SearchDTO } from '../models/SearchDTO';
 import style from './SearchPage.module.scss';
 import axios from 'axios';
+import { DocumentDTO } from '../models/DocumentDTO';
 
 export default function SearchPage() {
 
   const [searchDTO, setSearchDTO] = useState<SearchDTO>(new SearchDTO());
+  const [searchResults, setSearchResults] = useState<DocumentDTO>([]);
 
   const handleGetSearchResults = async () => {
+    console.log(searchDTO);
     axios.post('http://localhost:8080/api/search', searchDTO)
       .then(response => {
         console.log(response);
+        console.log(response.data.content);
+        setSearchResults(response.data.data.content);
       })
       .catch(error => {
         console.log(error);
       });
-      
+
   }
   
   return (
@@ -121,6 +126,7 @@ export default function SearchPage() {
                     newSearchDTO.governmentLevel = event.target.value;
                     setSearchDTO(newSearchDTO);
                   }}>
+                  <option value="">ALL</option>
                   <option value="OPSTINSKA">OPSTINSKA</option>
                   <option value="GRADSKA">GRADSKA</option>
                   <option value="POKRAJINSKA">POKRAJINSKA</option>

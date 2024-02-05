@@ -7,7 +7,7 @@ import com.example.ddmdemo.exceptionhandling.exception.MalformedQueryException;
 import com.example.ddmdemo.indexmodel.DummyIndex;
 import com.example.ddmdemo.indexmodel.IndexUnit;
 import com.example.ddmdemo.service.interfaces.SearchService;
-
+import org.elasticsearch.search.highlight.HighlightBuilder;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.common.unit.Fuzziness;
@@ -57,14 +57,26 @@ public class SearchServiceImpl implements SearchService {
 
             if(searchDTO.getTypeOfSearch().equals("standard_search")){
                 if(searchDTO.isContractDoc()){
-                    b.must(sb -> sb.match(m -> m.field("employeeName").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeName())));
-                    b.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeSurname())));
-                    b.must(sb -> sb.match(m -> m.field("governmentName").query(searchDTO.getGovernmentName())));
-                    b.must(sb -> sb.match(m -> m.field("governmentLevel").query(searchDTO.getGovernmentLevel())));
+                    if(!searchDTO.getEmployeeName().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("employeeName").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeName())));
+                    }
+                    if(!searchDTO.getEmployeeSurname().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeSurname())));
+                    }
+                    if(!searchDTO.getGovernmentName().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("governmentName").query(searchDTO.getGovernmentName())));
+                    }
+                    if(!searchDTO.getGovernmentLevel().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("governmentLevel").query(searchDTO.getGovernmentLevel())));
+                    }
+                    if(!searchDTO.getFullText().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
+                    }
+                }else{
+                    if(!searchDTO.getFullText().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
+                    }
                 }
-
-                b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
-                b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
 
             }else if(searchDTO.getTypeOfSearch().equals("boolean_query")){
                 b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
@@ -104,11 +116,19 @@ public class SearchServiceImpl implements SearchService {
         })))._toQuery();
 
 
-        var searchQueryBuilder =
-                new NativeQueryBuilder().withQuery(query)
-                        .withPageable(pageable);
+        var searchQueryBuilder = new NativeQueryBuilder()
+                .withQuery(query)
+                .withPageable(pageable);
 
         return runQuery1(searchQueryBuilder.build());
+    }
+
+    private HighlightBuilder buildHighlightBuilder() {
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        highlightBuilder.field("title");
+        highlightBuilder.field("content_sr");
+        highlightBuilder.field("content_en");
+        return highlightBuilder;
     }
 
 
