@@ -78,6 +78,13 @@ public class SearchServiceImpl implements SearchService {
                     }
                 }
 
+                if(searchDTO.isContractDoc() && !searchDTO.isLawDoc()){
+                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("CONTRACT")));
+                }
+                if(!searchDTO.isContractDoc() && searchDTO.isLawDoc()){
+                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("LAW")));
+                }
+
             }else if(searchDTO.getTypeOfSearch().equals("boolean_query")){
                 b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
                 b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
@@ -119,16 +126,7 @@ public class SearchServiceImpl implements SearchService {
         var searchQueryBuilder = new NativeQueryBuilder()
                 .withQuery(query)
                 .withPageable(pageable);
-
         return runQuery1(searchQueryBuilder.build());
-    }
-
-    private HighlightBuilder buildHighlightBuilder() {
-        HighlightBuilder highlightBuilder = new HighlightBuilder();
-        highlightBuilder.field("title");
-        highlightBuilder.field("content_sr");
-        highlightBuilder.field("content_en");
-        return highlightBuilder;
     }
 
 
@@ -138,6 +136,7 @@ public class SearchServiceImpl implements SearchService {
                 b.should(sb -> sb.match(m -> m.field("title").fuzziness(Fuzziness.ONE.asString()).query(token)));
                 b.should(sb -> sb.match(m -> m.field("content_sr").query(token)));
                 b.should(sb -> sb.match(m -> m.field("content_en").query(token)));
+                // ok sada radi :D
             });
             return b;
         })))._toQuery();
