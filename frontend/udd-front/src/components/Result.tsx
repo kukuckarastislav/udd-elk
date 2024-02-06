@@ -31,8 +31,12 @@ export default function Result({ doc }: ResultProps) {
         <div>
           <h2 className='text-md font-bold text-blue-800'>{doc.title}</h2>
           <p className='text-sm text-violet-700'>{doc.typeOfDoc}</p>
+          {doc.fileId}
         </div>
-        <Button variant='outlined' size='small' color='primary' >Download</Button>
+          <a href={"http://localhost:8080/api/file/"+doc.fileId} download="${result.title.replace(/\s+/g, '-')}">
+          <Button variant='outlined' size='small' color='primary' >Download</Button>
+          </a>
+        
       </div>
       
       {doc.typeOfDoc === 'CONTRACT' && 
