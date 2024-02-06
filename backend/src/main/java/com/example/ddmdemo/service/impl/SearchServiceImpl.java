@@ -11,8 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,12 +23,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
+import org.springframework.data.elasticsearch.client.erhlc.NativeSearchQuery;
+import org.springframework.data.elasticsearch.client.erhlc.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHitSupport;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -60,8 +68,105 @@ public class SearchServiceImpl implements SearchService {
         return runQuery(searchQueryBuilder.build());
     }
 
+    /*
+    public List<IndexUnit> search11(SearchDTO searchDTO, Pageable pageable) {
+
+        var query1 = BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
+
+            if(searchDTO.getTypeOfSearch().equals("standard_search")){
+                if(searchDTO.isContractDoc()){
+                    if(!searchDTO.getEmployeeName().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("employeeName").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeName())));
+                    }
+                    if(!searchDTO.getEmployeeSurname().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeSurname())));
+                    }
+                    if(!searchDTO.getGovernmentName().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("governmentName").query(searchDTO.getGovernmentName())));
+                    }
+                    if(!searchDTO.getGovernmentLevel().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("governmentLevel").query(searchDTO.getGovernmentLevel())));
+                    }
+                    if(!searchDTO.getFullText().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
+                    }
+                }else{
+                    if(!searchDTO.getFullText().isEmpty()){
+                        b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
+                    }
+                }
+
+                if(searchDTO.isContractDoc() && !searchDTO.isLawDoc()){
+                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("CONTRACT")));
+                }
+                if(!searchDTO.isContractDoc() && searchDTO.isLawDoc()){
+                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("LAW")));
+                }
+
+            }else if(searchDTO.getTypeOfSearch().equals("boolean_query")){
+                b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
+                b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
+                //TODO: implement complex boolean query
+                /*
+                // title: neki deo naslova AND content: neki deo sadrzaja OR name: Rastislav NOT surname: Pavlovic
+                String[] tokens = searchDTO.getBooleanQuery().split("(?<=AND|OR|NOT|:)|(?=AND|OR|NOT|:)");
+
+                for(int i = 0; i < tokens.length; i++){
+                    tokens[i] = tokens[i].trim();
+
+                    switch (tokens[i]) {
+                        case "AND":
+                            b.must(sb -> sb.match(
+                                    m -> m.field(field1).query(value1)));
+                            b.must(sb -> sb.match(m -> m.field(field2).query(value2)));
+                            break;
+                        case "OR":
+
+                            break;
+                        case "NOT":
+
+                            break;
+                        case ":":
+
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+
+            }
+
+            return b;
+        })));
+
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(QueryBuilders.boolQuery().must())
+                .withHighlightBuilder(new HighlightBuilder().field(field))
+                .build();
+
+        SearchHits<Document> searchHits = elasticsearchOperations.search(searchQuery, Document.class);
+
+
+
+        return searchHits.getSearchHits().stream()
+                .map(hit -> {
+                    Document document = hit.getContent();
+                    hit.getHighlightFields().forEach((key, value) -> {
+                        // Set highlighted text back to document
+                        document.setHighlightedText(value.get(0));
+                    });
+                    return document;
+                })
+                .toList();
+    }
+    */
+
     @Override
     public Page<IndexUnit> search(SearchDTO searchDTO, Pageable pageable) {
+
+
+
 
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         if (searchDTO.getTypeOfSearch().equals("standard_search")) {
@@ -130,7 +235,7 @@ public class SearchServiceImpl implements SearchService {
         return (Page<IndexUnit>) SearchHitSupport.unwrapSearchHits(searchHitsPaged);
 
 
-        /*
+/*
         SearchResponse searchResponse = null;
         try {
             searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
