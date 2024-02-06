@@ -103,10 +103,10 @@ export default function SearchPage() {
 
               <div className='block w-48'>
                 <span className="block text-sm font-medium text-slate-700">Employee Surname</span>
-                <input type="text" value={searchDTO.employeeSurname} className="cool-input"
+                <input type="text" value={searchDTO.employerSurname} className="cool-input"
                   onChange={(event) => {
                     let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
-                    newSearchDTO.employeeSurname = event.target.value;
+                    newSearchDTO.employerSurname = event.target.value;
                     setSearchDTO(newSearchDTO);
                   }}
                 />

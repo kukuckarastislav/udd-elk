@@ -7,7 +7,7 @@ import com.example.ddmdemo.exceptionhandling.exception.MalformedQueryException;
 import com.example.ddmdemo.indexmodel.DummyIndex;
 import com.example.ddmdemo.indexmodel.IndexUnit;
 import com.example.ddmdemo.service.interfaces.SearchService;
-import org.elasticsearch.search.highlight.HighlightBuilder;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.common.unit.Fuzziness;
@@ -92,13 +92,13 @@ public class SearchServiceImpl implements SearchService {
                                     x.must(sb -> sb.match(m -> m.field("employeeName").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeName())));
                                 }
                             }
-                            if (!searchDTO.getEmployeeSurname().isEmpty()) {
-                                if (searchDTO.getEmployeeSurname().contains("\"")) {
+                            if (!searchDTO.getEmployerSurname().isEmpty()) {
+                                if (searchDTO.getEmployerSurname().contains("\"")) {
                                     // is necessary to remove quotes from string?
-                                    searchDTO.setEmployeeSurname(searchDTO.getEmployeeSurname().replace("\"", ""));
-                                    x.must(sb -> sb.matchPhrase(m -> m.field("employerSurname").query(searchDTO.getEmployeeSurname())));
+                                    searchDTO.setEmployerSurname(searchDTO.getEmployerSurname().replace("\"", ""));
+                                    x.must(sb -> sb.matchPhrase(m -> m.field("employerSurname").query(searchDTO.getEmployerSurname())));
                                 } else {
-                                    x.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeSurname())));
+                                    x.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployerSurname())));
                                 }
                             }
                             if (!searchDTO.getGovernmentName().isEmpty()) {
@@ -162,13 +162,13 @@ public class SearchServiceImpl implements SearchService {
                             b.must(sb -> sb.match(m -> m.field("employeeName").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeName())));
                         }
                     }
-                    if(!searchDTO.getEmployeeSurname().isEmpty()){
-                        if(searchDTO.getEmployeeSurname().contains("\"")){
+                    if(!searchDTO.getEmployerSurname().isEmpty()){
+                        if(searchDTO.getEmployerSurname().contains("\"")){
                             // is necessary to remove quotes from string?
-                            searchDTO.setEmployeeSurname(searchDTO.getEmployeeSurname().replace("\"", ""));
-                            b.must(sb -> sb.matchPhrase(m -> m.field("employerSurname").query(searchDTO.getEmployeeSurname())));
+                            searchDTO.setEmployerSurname(searchDTO.getEmployerSurname().replace("\"", ""));
+                            b.must(sb -> sb.matchPhrase(m -> m.field("employerSurname").query(searchDTO.getEmployerSurname())));
                         }else{
-                            b.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeSurname())));
+                            b.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployerSurname())));
                         }
                     }
                     if(!searchDTO.getGovernmentName().isEmpty()){

@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SearchDTO {
     private String employeeName;
-    private String employeeSurname;
+    private String employerSurname;
     private String governmentName;
     private String governmentLevel;
     private String fullText;
