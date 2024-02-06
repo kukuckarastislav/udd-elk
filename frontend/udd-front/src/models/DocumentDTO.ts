@@ -1,7 +1,7 @@
 export class DocumentDTO {
   constructor(
     public employeeName: string = '',
-    public employeeSurname: string = '',
+    public employerSurname: string = '',
     public governmentName: string = '',
     public governmentLevel: string = '',
     public title: string = '',

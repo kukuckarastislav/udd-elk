@@ -4,11 +4,12 @@ import style from './SearchPage.module.scss';
 import axios from 'axios';
 import { DocumentDTO } from '../models/DocumentDTO';
 import { Button } from '@mui/material';
+import Result from '../components/Result';
 
 export default function SearchPage() {
 
   const [searchDTO, setSearchDTO] = useState<SearchDTO>(new SearchDTO());
-  const [searchResults, setSearchResults] = useState<DocumentDTO>([]);
+  const [searchResults, setSearchResults] = useState<DocumentDTO[]>([]);
   const booleanQueryOPERANDS = ['AND', 'OR', 'NOT']
   const booleanQueryFields = ['lawText:', 'contractText:', 'employeeName:', 'employerSurname:', 'governmentLevel: OPSTINSKA', 'governmentLevel: GRADSKA', 'governmentLevel: POKRAJINSKA', 'governmentLevel: DRZAVNA', 'governmentName:', 'address:', 'title:', 'typeOfDoc: LAW', 'typeOfDoc: CONTRACT'  ]
 
@@ -18,7 +19,7 @@ export default function SearchPage() {
       .then(response => {
         console.log(response);
         console.log(response.data.content);
-        setSearchResults(response.data.data.content);
+        setSearchResults(response.data.content);
       })
       .catch(error => {
         console.log(error);
@@ -205,6 +206,17 @@ export default function SearchPage() {
           </div>
 
         </div>
+        
+
+        
+        <div id="resultContainer" className='flex flex-col gap-1 mt-16'>
+          {searchResults.map((doc, index) => {
+            return (
+              <Result doc={doc} key={index} />
+            )
+          })}
+        </div>
+
       </div>
     </div>
   )
