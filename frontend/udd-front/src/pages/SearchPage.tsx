@@ -3,11 +3,14 @@ import { SearchDTO } from '../models/SearchDTO';
 import style from './SearchPage.module.scss';
 import axios from 'axios';
 import { DocumentDTO } from '../models/DocumentDTO';
+import { Button } from '@mui/material';
 
 export default function SearchPage() {
 
   const [searchDTO, setSearchDTO] = useState<SearchDTO>(new SearchDTO());
   const [searchResults, setSearchResults] = useState<DocumentDTO>([]);
+  const booleanQueryOPERANDS = ['AND', 'OR', 'NOT']
+  const booleanQueryFields = ['lawText:', 'contractText:', 'employeeName:', 'employerSurname:', 'governmentLevel: OPSTINSKA', 'governmentLevel: GRADSKA', 'governmentLevel: POKRAJINSKA', 'governmentLevel: DRZAVNA', 'governmentName:', 'address:', 'title:', 'typeOfDoc: LAW', 'typeOfDoc: CONTRACT'  ]
 
   const handleGetSearchResults = async () => {
     console.log(searchDTO);
@@ -163,6 +166,32 @@ export default function SearchPage() {
                     setSearchDTO(newSearchDTO);
                   }}
                 />
+                <div className='mt-4 flex gap-2'>
+                  {booleanQueryOPERANDS.map((operand, index) => {
+                    return (
+                      <Button variant='outlined' size='small' key={index} 
+                        onClick={() => {
+                          let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
+                          newSearchDTO.booleanQuery += ` ${operand} `;
+                          setSearchDTO(newSearchDTO);
+                        }}
+                      >{operand}</Button>
+                    )
+                  })}
+                </div>
+                <div className='mt-4 flex gap-2 flex-wrap'>
+                  {booleanQueryFields.map((operand, index) => {
+                    return (
+                      <Button variant='outlined' color='secondary' sx={{textTransform: "none"}} size='small' key={index} 
+                        onClick={() => {
+                          let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
+                          newSearchDTO.booleanQuery += ` ${operand} `;
+                          setSearchDTO(newSearchDTO);
+                        }}
+                      >{operand}</Button>
+                    )
+                  })}
+                </div>
               </div>
             }
               
