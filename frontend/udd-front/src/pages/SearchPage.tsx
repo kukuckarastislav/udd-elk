@@ -208,8 +208,8 @@ export default function SearchPage() {
         </div>
         
 
-        
-        <div id="resultContainer" className='flex flex-col gap-1 mt-16'>
+        <div className='mt-12 text-lg text-blue-800 font-bold'>{searchResults.length} Results</div>
+        <div id="resultContainer" className='flex flex-col gap-1'>
           {searchResults.map((doc, index) => {
             return (
               <Result doc={doc} key={index} />
