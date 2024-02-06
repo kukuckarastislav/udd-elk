@@ -18,15 +18,6 @@ public class IndexController {
 
     private final IndexingService indexingService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public DummyDocumentFileResponseDTO addDocumentFile(
-        @ModelAttribute DummyDocumentFileDTO documentFile) {
-        // OVO NE KORISTIMO MOZE DELETE :D
-        var serverFilename = indexingService.indexDocument(documentFile.file());
-        return new DummyDocumentFileResponseDTO(serverFilename);
-    }
-
     @PostMapping("/contract/parse")
     @ResponseStatus(HttpStatus.OK)
     public ContractParsedDataDTO parseContract(@RequestBody MultipartFile documentFile) {

@@ -3,12 +3,8 @@ package com.example.ddmdemo.service.impl;
 import com.example.ddmdemo.dto.ContractParsedDataDTO;
 import com.example.ddmdemo.exceptionhandling.exception.LoadingException;
 import com.example.ddmdemo.exceptionhandling.exception.StorageException;
-import com.example.ddmdemo.indexmodel.DummyIndex;
 import com.example.ddmdemo.indexmodel.IndexUnit;
-import com.example.ddmdemo.indexrepository.DummyIndexRepository;
-import com.example.ddmdemo.model.DummyTable;
 import com.example.ddmdemo.model.TypeOfDoc;
-import com.example.ddmdemo.respository.DummyRepository;
 import com.example.ddmdemo.service.interfaces.FileService;
 import com.example.ddmdemo.service.interfaces.IndexingService;
 import jakarta.transaction.Transactional;
@@ -31,47 +27,10 @@ import com.example.ddmdemo.indexrepository.IndexRepository;
 @RequiredArgsConstructor
 public class IndexingServiceImpl implements IndexingService {
 
-    private final DummyIndexRepository dummyIndexRepository;
-
     private final IndexRepository indexRepository;
-
-    private final DummyRepository dummyRepository;
-
     private final FileService fileService;
-
     private final LanguageDetector languageDetector;
 
-
-    @Override
-    @Transactional
-    public String indexDocument(MultipartFile documentFile) {
-        var newEntity = new DummyTable();
-        var newIndex = new DummyIndex();
-
-        var title = Objects.requireNonNull(documentFile.getOriginalFilename()).split("\\.")[0];
-        newIndex.setTitle(title);
-        newEntity.setTitle(title);
-
-        var documentContent = extractDocumentContent(documentFile);
-        if (detectLanguage(documentContent).equals("SR")) {
-            newIndex.setContentSr(documentContent);
-        } else {
-            newIndex.setContentEn(documentContent);
-        }
-        newEntity.setTitle(title);
-
-        var serverFilename = fileService.store(documentFile, UUID.randomUUID().toString());
-        newIndex.setServerFilename(serverFilename);
-        newEntity.setServerFilename(serverFilename);
-
-        newEntity.setMimeType(detectMimeType(documentFile));
-        var savedEntity = dummyRepository.save(newEntity);
-
-        newIndex.setDatabaseId(savedEntity.getId());
-        dummyIndexRepository.save(newIndex);
-
-        return serverFilename;
-    }
 
     @Override
     @Transactional

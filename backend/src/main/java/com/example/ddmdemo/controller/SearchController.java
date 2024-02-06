@@ -2,7 +2,6 @@ package com.example.ddmdemo.controller;
 
 import com.example.ddmdemo.dto.SearchDTO;
 import com.example.ddmdemo.dto.SearchQueryDTO;
-import com.example.ddmdemo.indexmodel.DummyIndex;
 import com.example.ddmdemo.indexmodel.IndexUnit;
 import com.example.ddmdemo.service.interfaces.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +24,4 @@ public class SearchController {
         return searchService.search(searchDTO, pageable);
     }
 
-    @PostMapping("/simple")
-    public Page<DummyIndex> simpleSearch(@RequestBody SearchQueryDTO simpleSearchQuery,
-                                         Pageable pageable) {
-        return searchService.simpleSearch(simpleSearchQuery.keywords(), pageable);
-    }
-
-    @PostMapping("/advanced")
-    public Page<DummyIndex> advancedSearch(@RequestBody SearchQueryDTO advancedSearchQuery,
-                                           Pageable pageable) {
-        return searchService.advancedSearch(advancedSearchQuery.keywords(), pageable);
-    }
 }

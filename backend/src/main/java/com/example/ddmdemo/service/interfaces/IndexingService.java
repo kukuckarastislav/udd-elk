@@ -7,8 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public interface IndexingService {
 
-    String indexDocument(MultipartFile documentFile);
-
     String indexContract(MultipartFile documentFile, ContractParsedDataDTO contractParsedDataDTO, String fileId);
     String indexContractAndSaveFile(MultipartFile documentFile, ContractParsedDataDTO contractParsedDataDTO);
     String indexLawAndSaveFile(MultipartFile documentFile);
