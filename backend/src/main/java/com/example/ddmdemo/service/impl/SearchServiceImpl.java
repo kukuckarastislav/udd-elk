@@ -53,7 +53,8 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public Page<IndexUnit> search(SearchDTO searchDTO, Pageable pageable) {
 
-        Query query = BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
+        //Query query = BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
+        Query query = BoolQuery.of(b -> {
 
             if(searchDTO.getTypeOfSearch().equals("standard_search")){
                 if(searchDTO.isContractDoc()){
@@ -96,18 +97,18 @@ public class SearchServiceImpl implements SearchService {
                     if(!searchDTO.getFullText().isEmpty()){
                         if(searchDTO.getFullText().contains("\"")){
                             // is necessary to remove quotes from string?
-                            searchDTO.setFullText(searchDTO.getFullText().replace("\"", ""));
-                            b.must(sb -> sb.matchPhrase(m -> m.field("contractText").query(searchDTO.getFullText())));
+                            b.should(sb -> sb.matchPhrase(m -> m.field("contractText").query(searchDTO.getFullText().replace("\"", ""))));
                         }else{
                             b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
                         }
                     }
-                }else{
+                }
+
+                if(searchDTO.isLawDoc()){
                     if(!searchDTO.getFullText().isEmpty()){
                         if(searchDTO.getFullText().contains("\"")){
                             // is necessary to remove quotes from string?
-                            searchDTO.setFullText(searchDTO.getFullText().replace("\"", ""));
-                            b.must(sb -> sb.matchPhrase(m -> m.field("lawText").query(searchDTO.getFullText())));
+                            b.should(sb -> sb.matchPhrase(m -> m.field("lawText").query(searchDTO.getFullText().replace("\"", ""))));
                         }else{
                             b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
                         }
@@ -122,27 +123,81 @@ public class SearchServiceImpl implements SearchService {
                 }
 
             }else if(searchDTO.getTypeOfSearch().equals("boolean_query")){
-                b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
-                b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
+                //b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
+                //b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
                 //TODO: implement complex boolean query
-                /*
+
                 // title: neki deo naslova AND content: neki deo sadrzaja OR name: Rastislav NOT surname: Pavlovic
+                /*
+                    title
+                    :
+                     neki deo naslova
+                    AND
+                     content
+                    :
+                     neki deo sadrzaja
+                    OR
+                     name
+                    :
+                     Rastislav
+                    AND
+
+                    NOT
+                     surname
+                    :
+                     Pavlovic
+
+                 */
                 String[] tokens = searchDTO.getBooleanQuery().split("(?<=AND|OR|NOT|:)|(?=AND|OR|NOT|:)");
 
+                boolean firstOperand = false;
+                String generatedQuery = "";
+                for(int i = 0; i < tokens.length; i++) {
+                    tokens[i] = tokens[i].trim();
+                }
                 for(int i = 0; i < tokens.length; i++){
                     tokens[i] = tokens[i].trim();
 
                     switch (tokens[i]) {
                         case "AND":
-                            b.must(sb -> sb.match(
-                                    m -> m.field(field1).query(value1)));
-                            b.must(sb -> sb.match(m -> m.field(field2).query(value2)));
+                            if(i+2 >= tokens.length || tokens[i+2].equals("NOT")){
+                                break;
+                            }
+                            if(!firstOperand){
+                                int finalI = i;
+                                b.must(sb -> sb.match(m -> m.field(tokens[finalI-3]).query(tokens[finalI-1])));
+                                b.must(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                generatedQuery += tokens[finalI-3] + ": " + tokens[finalI-1] + " AND " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                firstOperand = true;
+                            }else{
+                                int finalI = i;
+                                b.must(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                generatedQuery += " AND " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                            }
                             break;
                         case "OR":
-
+                            if(i+2 >= tokens.length || tokens[i+2].equals("NOT")){
+                                break;
+                            }
+                            if(!firstOperand){
+                                int finalI = i;
+                                b.should(sb -> sb.match(m -> m.field(tokens[finalI-3]).query(tokens[finalI-1])));
+                                b.should(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                generatedQuery += tokens[finalI-3] + ": " + tokens[finalI-1] + " OR " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                firstOperand = true;
+                            }else{
+                                int finalI = i;
+                                b.should(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                generatedQuery += " OR " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                            }
                             break;
                         case "NOT":
-
+                            if(!firstOperand){
+                                firstOperand = true;
+                            }
+                            int finalI = i;
+                            b.mustNot(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                            generatedQuery += " NOT " + tokens[finalI+1] + ": " + tokens[finalI+3];
                             break;
                         case ":":
 
@@ -152,11 +207,16 @@ public class SearchServiceImpl implements SearchService {
                     }
                 }
 
-                */
+                System.out.println("//////////////////// ORIGINAL query: " + searchDTO.getBooleanQuery());
+                System.out.println("//////////////////// GENERATED query: " + generatedQuery);
+
+
             }
 
             return b;
-        })))._toQuery();
+        })._toQuery();
+
+        System.out.println("//////////////////// QUERY BY ELASTIC: " + query.toString());
 
 
         var searchQueryBuilder = new NativeQueryBuilder()
