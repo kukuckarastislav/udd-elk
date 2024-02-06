@@ -244,14 +244,21 @@ public class SearchServiceImpl implements SearchService {
                             }
                             if(!firstOperand){
                                 int finalI = i;
-                                b.must(sb -> sb.match(m -> m.field(tokens[finalI-3]).query(tokens[finalI-1])));
-                                b.must(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
-                                generatedQuery += tokens[finalI-3] + ": " + tokens[finalI-1] + " AND " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                if(finalI-3 >= 0){
+                                    b.must(sb -> sb.match(m -> m.field(tokens[finalI-3]).query(tokens[finalI-1])));
+                                    generatedQuery += tokens[finalI-3] + ": " + tokens[finalI-1];
+                                }
+                                if(finalI+3 < tokens.length){
+                                    b.must(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                    generatedQuery += " AND " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                }
                                 firstOperand = true;
                             }else{
                                 int finalI = i;
-                                b.must(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
-                                generatedQuery += " AND " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                if(finalI+3 < tokens.length){
+                                    b.must(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                    generatedQuery += " AND " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                }
                             }
                             break;
                         case "OR":
@@ -260,14 +267,21 @@ public class SearchServiceImpl implements SearchService {
                             }
                             if(!firstOperand){
                                 int finalI = i;
-                                b.should(sb -> sb.match(m -> m.field(tokens[finalI-3]).query(tokens[finalI-1])));
-                                b.should(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
-                                generatedQuery += tokens[finalI-3] + ": " + tokens[finalI-1] + " OR " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                if(finalI-3 >= 0) {
+                                    b.should(sb -> sb.match(m -> m.field(tokens[finalI-3]).query(tokens[finalI-1])));
+                                    generatedQuery += tokens[finalI-3] + ": " + tokens[finalI-1];
+                                }
+                                if(finalI+3 < tokens.length){
+                                    b.should(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                    generatedQuery += " OR " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                }
                                 firstOperand = true;
                             }else{
                                 int finalI = i;
-                                b.should(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
-                                generatedQuery += " OR " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                if(finalI+3 < tokens.length){
+                                    b.should(sb -> sb.match(m -> m.field(tokens[finalI+1]).query(tokens[finalI+3])));
+                                    generatedQuery += " OR " + tokens[finalI+1] + ": " + tokens[finalI+3];
+                                }
                             }
                             break;
                         case "NOT":
