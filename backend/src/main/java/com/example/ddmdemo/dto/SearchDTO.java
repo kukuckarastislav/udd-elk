@@ -19,4 +19,6 @@ public class SearchDTO {
     private boolean lawDoc;
     private boolean contractDoc;
     private String typeOfSearch;
+    private double radius;
+    private String address;
 }

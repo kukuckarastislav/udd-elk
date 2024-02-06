@@ -7,6 +7,7 @@ import com.example.ddmdemo.indexmodel.IndexUnit;
 import com.example.ddmdemo.model.TypeOfDoc;
 import com.example.ddmdemo.service.interfaces.FileService;
 import com.example.ddmdemo.service.interfaces.IndexingService;
+import com.example.ddmdemo.utils.GeoSearchAPI;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,8 +44,9 @@ public class IndexingServiceImpl implements IndexingService {
         var documentContent = extractDocumentContent(documentFile);
         newContract.setContractText(documentContent);
 
-        //TODO: get geolocation from address
-        newContract.setLocation(new GeoPoint(45.0, 45.0));
+        var geo = GeoSearchAPI.getGeoLocation(contractParsedDataDTO.getGovernmentAddress());
+        System.out.println("ADRESA: "+ contractParsedDataDTO.getGovernmentAddress() + " lat:" +geo.getLat() + " lon:" + geo.getLon());
+        newContract.setLocation(new GeoPoint(geo.getLat(), geo.getLon()));
 
         indexRepository.save(newContract);
 
@@ -64,8 +66,9 @@ public class IndexingServiceImpl implements IndexingService {
         var documentContent = extractDocumentContent(documentFile);
         newContract.setContractText(documentContent);
 
-        //TODO: get geolocation from address
-        newContract.setLocation(new GeoPoint(45.0, 45.0));
+        var geo = GeoSearchAPI.getGeoLocation(contractParsedDataDTO.getGovernmentAddress());
+        System.out.println("ADRESA: "+ contractParsedDataDTO.getGovernmentAddress() + " lat:" +geo.getLat() + " lon:" + geo.getLon());
+        newContract.setLocation(new GeoPoint(geo.getLat(), geo.getLon()));
 
         indexRepository.save(newContract);
 

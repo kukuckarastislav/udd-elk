@@ -1,6 +1,10 @@
 package com.example.ddmdemo.service.impl;
 
+import co.elastic.clients.elasticsearch._types.GeoDistanceType;
+import co.elastic.clients.elasticsearch._types.GeoLocation;
+import co.elastic.clients.elasticsearch._types.LatLonGeoLocation;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.GeoDistanceQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import com.example.ddmdemo.dto.SearchDTO;
 import com.example.ddmdemo.exceptionhandling.exception.MalformedQueryException;
@@ -8,6 +12,8 @@ import com.example.ddmdemo.indexmodel.IndexUnit;
 import com.example.ddmdemo.service.interfaces.SearchService;
 
 import java.util.List;
+
+import com.example.ddmdemo.utils.GeoSearchAPI;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.springframework.data.domain.Page;
@@ -18,6 +24,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +32,33 @@ public class SearchServiceImpl implements SearchService {
 
     private final ElasticsearchOperations elasticsearchTemplate;
 
+    private Page<IndexUnit> geoSearch(SearchDTO searchDTO, Pageable pageable){
+
+        var geo = GeoSearchAPI.getGeoLocation(searchDTO.getAddress());
+
+        var geoLocation = new GeoLocation.Builder().latlon(
+                new LatLonGeoLocation.Builder().lon(geo.getLon()).lat(geo.getLat()).build()).build();
+
+        var gs = GeoDistanceQuery.of(g -> {
+            g.field("location")
+                    .distance(+searchDTO.getRadius()+"km")
+                    .distanceType(GeoDistanceType.Plane)
+                    .location(geoLocation);
+            return g;
+        })._toQuery();
+
+        var searchQueryBuilder = new NativeQueryBuilder()
+                .withQuery(gs)
+                .withPageable(pageable);
+        return runQuery(searchQueryBuilder.build());
+    }
+
     @Override
     public Page<IndexUnit> search(SearchDTO searchDTO, Pageable pageable) {
+
+        if(searchDTO.getTypeOfSearch().equals("geo_search")){
+            return geoSearch(searchDTO, pageable);
+        }
 
         //Query query = BoolQuery.of(q -> q.must(mb -> mb.bool(b -> {
         Query query = BoolQuery.of(b -> {
