@@ -9,6 +9,7 @@ export class SearchDTO {
     public lawDoc: boolean = true,
     public contractDoc: boolean = true,
     public typeOfSearch: string = 'standard_search',
-    //TODO: geo location 
+    public address: string = '',
+    public radius: number = 0,
   ) {}
 }

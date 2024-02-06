@@ -58,6 +58,17 @@ export default function SearchPage() {
                   />
                 <label htmlFor="radio_boolean_query" className="block text-sm font-medium text-slate-700 cursor-pointer">Advanced search</label>
               </div>
+              <div className='flex gap-2'>
+                <input id="radio_geo_search" value="geo_search" name="search_type" type="radio" className="cursor-pointer" checked={searchDTO.typeOfSearch === "geo_search"}
+                    onChange={(event) => {
+                      console.log("geo_search");
+                      let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
+                      newSearchDTO.typeOfSearch = event.target.value;
+                      setSearchDTO(newSearchDTO);
+                    }}
+                  />
+                <label htmlFor="radio_geo_search" className="block text-sm font-medium text-slate-700 cursor-pointer">Geolocation search</label>
+              </div>
             </div>
 
             {searchDTO.typeOfSearch === 'standard_search' &&
@@ -192,6 +203,31 @@ export default function SearchPage() {
                       >{operand}</Button>
                     )
                   })}
+                </div>
+              </div>
+            }
+
+            {searchDTO.typeOfSearch === 'geo_search' &&
+              <div className='flex gap-4'>
+                <div className='block w-96'>
+                  <span className="block text-sm font-medium text-slate-700">Address</span>
+                  <input type="text" value={searchDTO.address} className="cool-input"
+                    onChange={(event) => {
+                      let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
+                      newSearchDTO.address = event.target.value;
+                      setSearchDTO(newSearchDTO);
+                    }}
+                  />
+                </div>
+                <div className='block w-28'>
+                  <span className="block text-sm font-medium text-slate-700">Radius (KM)</span>
+                  <input type="number" min={1} value={searchDTO.radius} className="cool-input"
+                    onChange={(event) => {
+                      let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
+                      newSearchDTO.radius = event.target.value;
+                      setSearchDTO(newSearchDTO);
+                    }}
+                  />
                 </div>
               </div>
             }
