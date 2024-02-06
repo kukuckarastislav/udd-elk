@@ -57,7 +57,102 @@ public class SearchServiceImpl implements SearchService {
         Query query = BoolQuery.of(b -> {
 
             if(searchDTO.getTypeOfSearch().equals("standard_search")){
-                if(searchDTO.isContractDoc()){
+
+
+                if(searchDTO.isContractDoc() && searchDTO.isLawDoc()) {
+                    // Oba dokumenta
+
+                    b.should(xxx -> {
+
+                        // LAW
+                        xxx.bool(x -> {
+                            if (!searchDTO.getFullText().isEmpty()) {
+                                if (searchDTO.getFullText().contains("\"")) {
+                                    // is necessary to remove quotes from string?
+                                    x.must(sb -> sb.matchPhrase(m -> m.field("lawText").query(searchDTO.getFullText().replace("\"", ""))));
+                                } else {
+                                    x.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
+                                }
+                            }
+
+                            return x;
+                        });
+                        return xxx;
+                    });
+
+                    // CONTRACT
+                    b.should(xxx -> {
+                        xxx.bool(x -> {
+                            if (!searchDTO.getEmployeeName().isEmpty()) {
+                                if (searchDTO.getEmployeeName().contains("\"")) {
+                                    // is necessary to remove quotes from string?
+                                    searchDTO.setEmployeeName(searchDTO.getEmployeeName().replace("\"", ""));
+                                    x.must(sb -> sb.matchPhrase(m -> m.field("employeeName").query(searchDTO.getEmployeeName())));
+                                } else {
+                                    x.must(sb -> sb.match(m -> m.field("employeeName").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeName())));
+                                }
+                            }
+                            if (!searchDTO.getEmployeeSurname().isEmpty()) {
+                                if (searchDTO.getEmployeeSurname().contains("\"")) {
+                                    // is necessary to remove quotes from string?
+                                    searchDTO.setEmployeeSurname(searchDTO.getEmployeeSurname().replace("\"", ""));
+                                    x.must(sb -> sb.matchPhrase(m -> m.field("employerSurname").query(searchDTO.getEmployeeSurname())));
+                                } else {
+                                    x.must(sb -> sb.match(m -> m.field("employerSurname").fuzziness(Fuzziness.ONE.asString()).query(searchDTO.getEmployeeSurname())));
+                                }
+                            }
+                            if (!searchDTO.getGovernmentName().isEmpty()) {
+                                if (searchDTO.getGovernmentName().contains("\"")) {
+                                    // is necessary to remove quotes from string?
+                                    searchDTO.setGovernmentName(searchDTO.getGovernmentName().replace("\"", ""));
+                                    x.must(sb -> sb.matchPhrase(m -> m.field("governmentName").query(searchDTO.getGovernmentName())));
+                                } else {
+                                    x.must(sb -> sb.match(m -> m.field("governmentName").query(searchDTO.getGovernmentName())));
+                                }
+                            }
+                            if (!searchDTO.getGovernmentLevel().isEmpty()) {
+                                if (searchDTO.getGovernmentLevel().contains("\"")) {
+                                    // is necessary to remove quotes from string?
+                                    searchDTO.setGovernmentLevel(searchDTO.getGovernmentLevel().replace("\"", ""));
+                                    x.must(sb -> sb.matchPhrase(m -> m.field("governmentLevel").query(searchDTO.getGovernmentLevel())));
+                                } else {
+                                    x.must(sb -> sb.match(m -> m.field("governmentLevel").query(searchDTO.getGovernmentLevel())));
+                                }
+                            }
+                            if (!searchDTO.getFullText().isEmpty()) {
+                                if (searchDTO.getFullText().contains("\"")) {
+                                    // is necessary to remove quotes from string?
+                                    x.must(sb -> sb.matchPhrase(m -> m.field("contractText").query(searchDTO.getFullText().replace("\"", ""))));
+                                } else {
+                                    x.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
+                                }
+                            }
+
+                            return x;
+                        });
+
+                        return xxx;
+                    });
+
+
+
+                }
+                else if(searchDTO.isLawDoc()){
+                    // Samo zakon
+                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("LAW")));
+                    if(!searchDTO.getFullText().isEmpty()){
+                        if(searchDTO.getFullText().contains("\"")){
+                            // is necessary to remove quotes from string?
+                            b.must(sb -> sb.matchPhrase(m -> m.field("lawText").query(searchDTO.getFullText().replace("\"", ""))));
+                        }else{
+                            b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
+                        }
+                    }
+
+                }
+                else if(searchDTO.isContractDoc()){
+                    // Samo ugovor
+                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("CONTRACT")));
                     if(!searchDTO.getEmployeeName().isEmpty()){
                         if(searchDTO.getEmployeeName().contains("\"")){
                             // is necessary to remove quotes from string?
@@ -97,30 +192,14 @@ public class SearchServiceImpl implements SearchService {
                     if(!searchDTO.getFullText().isEmpty()){
                         if(searchDTO.getFullText().contains("\"")){
                             // is necessary to remove quotes from string?
-                            b.should(sb -> sb.matchPhrase(m -> m.field("contractText").query(searchDTO.getFullText().replace("\"", ""))));
+                            b.must(sb -> sb.matchPhrase(m -> m.field("contractText").query(searchDTO.getFullText().replace("\"", ""))));
                         }else{
                             b.must(sb -> sb.match(m -> m.field("contractText").query(searchDTO.getFullText())));
                         }
                     }
                 }
 
-                if(searchDTO.isLawDoc()){
-                    if(!searchDTO.getFullText().isEmpty()){
-                        if(searchDTO.getFullText().contains("\"")){
-                            // is necessary to remove quotes from string?
-                            b.should(sb -> sb.matchPhrase(m -> m.field("lawText").query(searchDTO.getFullText().replace("\"", ""))));
-                        }else{
-                            b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));
-                        }
-                    }
-                }
 
-                if(searchDTO.isContractDoc() && !searchDTO.isLawDoc()){
-                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("CONTRACT")));
-                }
-                if(!searchDTO.isContractDoc() && searchDTO.isLawDoc()){
-                    b.must(sb -> sb.match(m -> m.field("typeOfDoc").query("LAW")));
-                }
 
             }else if(searchDTO.getTypeOfSearch().equals("boolean_query")){
                 //b.must(sb -> sb.match(m -> m.field("lawText").query(searchDTO.getFullText())));

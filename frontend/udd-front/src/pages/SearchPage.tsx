@@ -30,6 +30,33 @@ export default function SearchPage() {
           
           <div className='flex flex-col gap-4'>
 
+
+          <div className='flex gap-6'>
+              <div className='flex gap-2'>
+                <input id="radio_standard_search" value="standard_search" name="search_type" type="radio"   className="cursor-pointer" checked={searchDTO.typeOfSearch === "standard_search"}
+                    onChange={(event) => {
+                      console.log("standard_search");
+                      let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
+                      newSearchDTO.typeOfSearch = event.target.value;
+                      setSearchDTO(newSearchDTO);
+                    }}
+                  />
+                <label htmlFor="radio_standard_search" className="block text-sm font-medium text-slate-700 cursor-pointer">Standard search</label>
+              </div>
+              <div className='flex gap-2'>
+                <input id="radio_boolean_query" value="boolean_query" name="search_type" type="radio" className="cursor-pointer" checked={searchDTO.typeOfSearch === "boolean_query"}
+                    onChange={(event) => {
+                      console.log("boolean_query");
+                      let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
+                      newSearchDTO.typeOfSearch = event.target.value;
+                      setSearchDTO(newSearchDTO);
+                    }}
+                  />
+                <label htmlFor="radio_boolean_query" className="block text-sm font-medium text-slate-700 cursor-pointer">Advanced search</label>
+              </div>
+            </div>
+
+            {searchDTO.typeOfSearch === 'standard_search' &&
             <div className='flex flex-col gap-2'>
               <div className='flex gap-2 cursor-pointer'>
                 <input id="coolCheckbox_law" type="checkbox" checked={searchDTO.lawDoc} className="cursor-pointer"
@@ -54,31 +81,7 @@ export default function SearchPage() {
                 <label htmlFor="coolCheckbox_contract" className="block text-sm font-medium text-slate-700 cursor-pointer">Contracts</label>
               </div>
             </div>
-
-            <div className='flex gap-6'>
-              <div className='flex gap-2'>
-                <input id="radio_standard_search" value="standard_search" name="search_type" type="radio"   className="cursor-pointer" checked={searchDTO.typeOfSearch === "standard_search"}
-                    onChange={(event) => {
-                      console.log("standard_search");
-                      let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
-                      newSearchDTO.typeOfSearch = event.target.value;
-                      setSearchDTO(newSearchDTO);
-                    }}
-                  />
-                <label htmlFor="radio_standard_search" className="block text-sm font-medium text-slate-700 cursor-pointer">Standard search</label>
-              </div>
-              <div className='flex gap-2'>
-                <input id="radio_boolean_query" value="boolean_query" name="search_type" type="radio" className="cursor-pointer" checked={searchDTO.typeOfSearch === "boolean_query"}
-                    onChange={(event) => {
-                      console.log("boolean_query");
-                      let newSearchDTO = JSON.parse(JSON.stringify(searchDTO))
-                      newSearchDTO.typeOfSearch = event.target.value;
-                      setSearchDTO(newSearchDTO);
-                    }}
-                  />
-                <label htmlFor="radio_boolean_query" className="block text-sm font-medium text-slate-700 cursor-pointer">Boolean query</label>
-              </div>
-            </div>
+            }
 
             {(searchDTO.contractDoc && searchDTO.typeOfSearch === 'standard_search') && 
             <div className='flex flex-col gap-4'>
