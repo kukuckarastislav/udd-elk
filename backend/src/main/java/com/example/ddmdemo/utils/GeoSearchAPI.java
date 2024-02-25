@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class GeoSearchAPI {
 
     private final static String url = "https://us1.locationiq.com/v1/search";
-    private final static String API_KEY = "pk.eea551ba093ede1d195e0c0325e9eb20";
+    private final static String API_KEY = "API_KEY";
 
     // create static function
     public static GeoLocationDTO getGeoLocation(String address){
