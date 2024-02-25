@@ -48,13 +48,13 @@ This project is part of the curriculum for the "Upravljanje digitalnim dokumenti
 ![ss1](/AppScreenshot/ss1.png)
 
 ### Advanced search - Boolean query
-![ss1](/AppScreenshot/ss3.png)
+![ss2](/AppScreenshot/ss3.png)
 
 ### Geolocation search
-![ss1](/AppScreenshot/ss4.png)
+![ss3](/AppScreenshot/ss4.png)
 
 ### Creating new Government and uplouding contract, parsing text from contract
-![ss1](/AppScreenshot/Screenshot 2024-02-04 030115.png)
+![ss4](/AppScreenshot/ss5.png)
 
 
 
